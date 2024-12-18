@@ -56,6 +56,25 @@ const MemoryGame = () => {
         />
       </div>
       {/* Game Board */}
+      <div
+        className={`grid gap-2 mb-4`}
+        style={{
+          gridTemplateColumns: `repeat(${gridSize},minmax(0,1fr))`,
+          width: `min(100%,${gridSize * 5.5}rem)`,
+        }}
+      >
+        {cards.map((card) => {
+          return (
+            <div
+              key={card.id}
+              className="aspect-square flex items-center justify-center text-xl font-bold rounded-lg cursor-pointer
+              transition-all duration-300 bg-gray-300 text-gray-400"
+            >
+              {card.number}
+            </div>
+          );
+        })}
+      </div>
 
       {/* Result */}
 
