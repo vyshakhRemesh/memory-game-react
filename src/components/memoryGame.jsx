@@ -6,6 +6,7 @@ const MemoryGame = () => {
 
   const [flipped, setFlipped] = useState([]);
   const [solved, setSolved] = useState([]);
+  // const [maxMoveCount, setMaxMoveCount] = useState(0);
 
   const [disabled, setDisabled] = useState(false);
   const [won, setWon] = useState(false);
@@ -23,7 +24,7 @@ const MemoryGame = () => {
     const numbers = [...Array(pairCount).keys()].map((n) => n + 1);
     const shuffledCards = [...numbers, ...numbers]
       .sort(() => Math.random() - 0.5)
-      // .slice(0, totalCards);
+      // .slice(0, totalCards)
       .map((number, index) => ({ id: index, number }));
     console.log(shuffledCards);
 
@@ -37,14 +38,71 @@ const MemoryGame = () => {
     initializeGame();
   }, [gridSize]);
 
+  useEffect(() => {
+    checkWin();
+  }, [solved]);
+
+  const checkMatch = (secondId) => {
+    const [firstId] = flipped; //takes the first element(first ID) in the flipped arrary
+    if (cards[firstId].number === cards[secondId].number) {
+      setSolved([...solved, firstId, secondId]);
+      setFlipped([]);
+      setDisabled(false);
+    } else {
+      setTimeout(() => {
+        setFlipped([]);
+        setDisabled(false);
+      }, 1000);
+    }
+  };
+
+  const handleClick = (id) => {
+    if (disabled || won) return;
+
+    if (flipped.length === 0) {
+      setFlipped([id]);
+      return;
+    }
+
+    if (flipped.length === 1) {
+      setDisabled(true);
+      if (id !== flipped[0]) {
+        setFlipped([...flipped, id]);
+        //check match logic
+        checkMatch(id);
+      } else {
+        setFlipped([]);
+        setDisabled(false);
+      }
+    }
+  };
+
+  const isFlipped = (id) => {
+    return flipped.includes(id);
+    // || solved.includes(id);
+  };
+
+  const isSolved = (id) => {
+    return solved.includes(id);
+  };
+
+  const checkWin = () => {
+    if (solved.length === cards.length && cards.length > 0) {
+      setWon(true);
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
       <h1 className="text-3xl font-bold mb-6">Memory Game</h1>
       {/* Input */}
       <div className="mb-4">
+        {/* Grid Size input */}
+
         <label className="mr-2" htmlFor="gridSize">
           Grid Size:(max10)
         </label>
+
         <input
           type="number"
           id="gridSize"
@@ -54,6 +112,15 @@ const MemoryGame = () => {
           onChange={handleGridSizeChange}
           className="border-2 border-gray-300 rounded px-2 py-1"
         />
+
+        {/* Max Move count input */}
+
+        {/* <label htmlFor=""></label>
+        <input
+          type="number"
+          value={maxMoveCount}
+          onChange={(e) => setMaxMoveCount(parseInt(e.target.value))}
+        /> */}
       </div>
       {/* Game Board */}
       <div
@@ -67,18 +134,57 @@ const MemoryGame = () => {
           return (
             <div
               key={card.id}
-              className="aspect-square flex items-center justify-center text-xl font-bold rounded-lg cursor-pointer
-              transition-all duration-300 bg-gray-300 text-gray-400"
+              onClick={() => handleClick(card.id)}
+              className={`aspect-square flex items-center justify-center text-xl font-bold rounded-lg cursor-pointer
+              transition-all duration-300 ${
+                //method if we are keeping fliped and solved as different
+                isFlipped(card.id)
+                  ? "bg-blue-500 text-white"
+                  : isSolved(card.id)
+                  ? "bg-green-500 text-white"
+                  : " bg-gray-300 text-gray-400"
+
+                //method if we consider solved as also a fliped card
+                // isFlipped(card.id)
+                //   ? isSolved(card.id)
+                //     ? "bg-green-500 text-white"
+                //     : "bg-blue-500 text-white"
+                //   : " bg-gray-300 text-gray-400"
+              } 
+               
+              `}
             >
-              {card.number}
+              {/* {isFlipped(card.id) ? card.number : "?"} */}
+              {/* if solved card is also flipped */}
+
+              {/* if solved and flipped are different then */}
+              {isFlipped(card.id)
+                ? card.number
+                : isSolved(card.id)
+                ? card.number
+                : "?"}
             </div>
           );
         })}
       </div>
 
       {/* Result */}
-
+      <div>
+        {won && (
+          <div className="mt-4 text-4xl font-bold text-green-600 animate-bounce">
+            You won !!
+          </div>
+        )}
+      </div>
       {/* Reset / Play Again Btn */}
+      <div>
+        <button
+          onClick={initializeGame}
+          className="mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
+        >
+          {won ? "play again" : "Reset"}
+        </button>
+      </div>
     </div>
   );
 };
