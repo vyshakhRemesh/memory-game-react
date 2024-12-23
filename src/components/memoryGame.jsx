@@ -137,37 +137,43 @@ const MemoryGame = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
       <h1 className="text-3xl font-bold mb-6">Memory Game</h1>
 
-      {/* Input */}
-      <div className="mb-4 flex flex-col">
-        {/* Grid Size input */}
+      {/* When we start the game the input fields are hidden */}
+      {moveCount > 0 ? (
+        <div></div>
+      ) : (
+        // Input
+        <div className="mb-4 flex flex-col">
+          {/* Grid Size input */}
 
-        <label className="mr-2" htmlFor="gridSize">
-          Grid Size:(max10)
-        </label>
+          <label className="mr-2" htmlFor="gridSize">
+            Grid Size:(max10)
+          </label>
 
-        <input
-          type="number"
-          id="gridSize"
-          min="2"
-          max="10"
-          value={gridSize}
-          onChange={handleGridSizeChange}
-          className="border-2 border-gray-300 rounded px-2 py-1"
-        />
+          <input
+            type="number"
+            id="gridSize"
+            min="2"
+            max="10"
+            value={gridSize}
+            onChange={handleGridSizeChange}
+            className="border-2 border-gray-300 rounded px-2 py-1"
+          />
 
-        {/* Max Move count input */}
+          {/* Max Move count input */}
 
-        <label className="mr-2" htmlFor="moveCount">
-          Maxinum Moves Allowed:(0 is for unlimited moves)
-        </label>
-        <input
-          id="moveCount"
-          type="number"
-          value={maxMoveCount}
-          onChange={(e) => setMaxMoveCount(parseInt(e.target.value))}
-          className="border-2 border-gray-300 rounded px-2 py-1"
-        />
-      </div>
+          <label className="mr-2" htmlFor="moveCount">
+            Maxinum Moves Allowed:(0 is for unlimited moves)
+          </label>
+          <input
+            id="moveCount"
+            type="number"
+            value={maxMoveCount}
+            onChange={(e) => setMaxMoveCount(parseInt(e.target.value))}
+            className="border-2 border-gray-300 rounded px-2 py-1"
+          />
+        </div>
+      )}
+
       {/* Moves left progress  */}
       <div>
         Moves :{moveCount}/{maxMoveCount}
