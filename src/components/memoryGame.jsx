@@ -6,8 +6,11 @@ const MemoryGame = () => {
 
   const [flipped, setFlipped] = useState([]);
   const [solved, setSolved] = useState([]);
-  // const [maxMoveCount, setMaxMoveCount] = useState(0);
 
+  const [maxMoveCount, setMaxMoveCount] = useState(0); //maxmove restriction state variable
+  const [moveCount, setMoveCount] = useState(0); //number of moves (one pair is one move)
+
+  const [lost, setLost] = useState(false);
   const [disabled, setDisabled] = useState(false);
   const [won, setWon] = useState(false);
 
@@ -32,18 +35,31 @@ const MemoryGame = () => {
     setFlipped([]);
     setSolved([]);
     setWon(false);
+    setLost(false);
+    setMoveCount(0);
   };
 
   useEffect(() => {
     initializeGame();
-  }, [gridSize]);
+  }, [gridSize, maxMoveCount]);
+
+  // useEffect(() => {
+  //   checkWin();
+  // }, [solved]);
+
+  // useEffect(() => {
+  //   console.log(won);
+
+  //   checkLoss();
+  // }, [moveCount]);
 
   useEffect(() => {
-    checkWin();
-  }, [solved]);
+    checkResult();
+  }, [moveCount]);
 
   const checkMatch = (secondId) => {
     const [firstId] = flipped; //takes the first element(first ID) in the flipped arrary
+    // console.log(flipped);
     if (cards[firstId].number === cards[secondId].number) {
       setSolved([...solved, firstId, secondId]);
       setFlipped([]);
@@ -65,9 +81,13 @@ const MemoryGame = () => {
     }
 
     if (flipped.length === 1) {
+      //increase move count
+      setMoveCount(moveCount + 1);
+
       setDisabled(true);
       if (id !== flipped[0]) {
         setFlipped([...flipped, id]);
+
         //check match logic
         checkMatch(id);
       } else {
@@ -86,17 +106,39 @@ const MemoryGame = () => {
     return solved.includes(id);
   };
 
-  const checkWin = () => {
+  // const checkWin = () => {
+  //   if (solved.length === cards.length && cards.length > 0) {
+  //     setWon(true);
+  //   }
+  // };
+
+  // const checkLoss =  () => {
+  //    checkWin();
+  //   console.log(`win status at the checkloss is ${won}`);
+
+  //   if (won === true) {
+  //     console.log("returned at the check loss");
+  //     return;
+  //   }
+  //   if (maxMoveCount > 0 && maxMoveCount <= moveCount) {
+  //     setLost(true);
+  //   }
+  // };
+
+  const checkResult = () => {
     if (solved.length === cards.length && cards.length > 0) {
       setWon(true);
+    } else if (maxMoveCount > 0 && maxMoveCount <= moveCount) {
+      setLost(true);
     }
   };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
       <h1 className="text-3xl font-bold mb-6">Memory Game</h1>
+
       {/* Input */}
-      <div className="mb-4">
+      <div className="mb-4 flex flex-col">
         {/* Grid Size input */}
 
         <label className="mr-2" htmlFor="gridSize">
@@ -115,27 +157,41 @@ const MemoryGame = () => {
 
         {/* Max Move count input */}
 
-        {/* <label htmlFor=""></label>
+        <label className="mr-2" htmlFor="moveCount">
+          Maxinum Moves Allowed:(0 is for unlimited moves)
+        </label>
         <input
+          id="moveCount"
           type="number"
           value={maxMoveCount}
           onChange={(e) => setMaxMoveCount(parseInt(e.target.value))}
-        /> */}
+          className="border-2 border-gray-300 rounded px-2 py-1"
+        />
       </div>
-      {/* Game Board */}
-      <div
-        className={`grid gap-2 mb-4`}
-        style={{
-          gridTemplateColumns: `repeat(${gridSize},minmax(0,1fr))`,
-          width: `min(100%,${gridSize * 5.5}rem)`,
-        }}
-      >
-        {cards.map((card) => {
-          return (
-            <div
-              key={card.id}
-              onClick={() => handleClick(card.id)}
-              className={`aspect-square flex items-center justify-center text-xl font-bold rounded-lg cursor-pointer
+      {/* Moves left progress  */}
+      <div>
+        Moves :{moveCount}/{maxMoveCount}
+      </div>
+
+      {/*  */}
+      {lost ? (
+        // Game over message
+        <div>OOPS</div>
+      ) : (
+        // Game Board
+        <div
+          className={`grid gap-2 mb-4`}
+          style={{
+            gridTemplateColumns: `repeat(${gridSize},minmax(0,1fr))`,
+            width: `min(100%,${gridSize * 5.5}rem)`,
+          }}
+        >
+          {cards.map((card) => {
+            return (
+              <div
+                key={card.id}
+                onClick={() => handleClick(card.id)}
+                className={`aspect-square flex items-center justify-center text-xl font-bold rounded-lg cursor-pointer
               transition-all duration-300 ${
                 //method if we are keeping fliped and solved as different
                 isFlipped(card.id)
@@ -153,27 +209,34 @@ const MemoryGame = () => {
               } 
                
               `}
-            >
-              {/* {isFlipped(card.id) ? card.number : "?"} */}
-              {/* if solved card is also flipped */}
+              >
+                {/* {isFlipped(card.id) ? card.number : "?"} */}
+                {/* if solved card is also flipped */}
 
-              {/* if solved and flipped are different then */}
-              {isFlipped(card.id)
-                ? card.number
-                : isSolved(card.id)
-                ? card.number
-                : "?"}
-            </div>
-          );
-        })}
-      </div>
+                {/* if solved and flipped are different then */}
+                {isFlipped(card.id)
+                  ? card.number
+                  : isSolved(card.id)
+                  ? card.number
+                  : "?"}
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       {/* Result */}
       <div>
-        {won && (
+        {won ? (
           <div className="mt-4 text-4xl font-bold text-green-600 animate-bounce">
             You won !!
           </div>
+        ) : lost ? (
+          <div className="mt-4 text-4xl font-bold text-red-600 animate-bounce">
+            Game over{" "}
+          </div>
+        ) : (
+          ""
         )}
       </div>
       {/* Reset / Play Again Btn */}
