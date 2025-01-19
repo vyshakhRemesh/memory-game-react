@@ -1,5 +1,5 @@
 import "./App.css";
-import MemoryGame from "./components/memoryGame";
+import MemoryGame from "./components/MemoryGame";
 
 function App() {
   return (
