@@ -11,7 +11,7 @@ const Card = ({ card, handleClick, isFlipped, isSolved }) => {
     isFlipped(card.id)
       ? "bg-blue-500 text-white"
       : isSolved(card.id)
-      ? "bg-green-500 text-white"
+      ? "bg-green-500 text-white pointer-events-none "
       : " bg-gray-300 text-gray-400"
 
     //method if we consider solved as also a fliped card
@@ -20,7 +20,7 @@ const Card = ({ card, handleClick, isFlipped, isSolved }) => {
     //     ? "bg-green-500 text-white"
     //     : "bg-blue-500 text-white"
     //   : " bg-gray-300 text-gray-400"
-  }
+  } 
 
   `}
     >

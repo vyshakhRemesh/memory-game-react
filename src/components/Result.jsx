@@ -1,6 +1,6 @@
 import React from "react";
 
-const Result = ({ initializeGame, won, lost }) => {
+const Result = ({ resetGame, won, lost }) => {
   return (
     <div>
       <div>
@@ -19,11 +19,17 @@ const Result = ({ initializeGame, won, lost }) => {
       {/* Reset / Play Again Btn */}
       <div>
         <button
-          onClick={initializeGame}
+          onClick={() => resetGame()}
           className="mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
         >
-          {won ? "play again" : "Reset"}
+          {won || lost ? "play again" : "Reset"}
         </button>
+        {/* <button
+          onClick={() => resetGame()}
+          className="mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
+        >
+          {won || lost ? "play again" : "Reset"}
+        </button> */}
       </div>
     </div>
   );
