@@ -11,10 +11,10 @@ const MemoryGame = ({ gameMode }) => {
   const [flipped, setFlipped] = useState([]);
   const [solved, setSolved] = useState([]);
 
-  const [maxMoveCount, setMaxMoveCount] = useState(0); //maxmove restriction state variable
-  const [moveCount, setMoveCount] = useState(0); //number of moves (one pair is one move)
+  const [maxMoveCount, setMaxMoveCount] = useState(0); // maxmove restriction state variable
+  const [moveCount, setMoveCount] = useState(0); // number of moves (one pair is one move)
 
-  const [time, setTime] = useState(100); //time is 100 by default
+  const [time, setTime] = useState(100); // time is 100 by default
 
   const [start, setStart] = useState(false);
   const [lost, setLost] = useState(false);
@@ -32,9 +32,10 @@ const MemoryGame = ({ gameMode }) => {
     setStart(true);
     initializeGame();
   };
+
   const resetGame = () => {
     setStart(false);
-    setTime(100); //back to default
+    setTime(100); // back to default
     initializeGame();
   };
 
@@ -76,11 +77,6 @@ const MemoryGame = ({ gameMode }) => {
     if (disabled || won) return;
 
     if (flipped.length === 0) {
-      // const index = solved.findIndex((element) => element === id);
-      // console.log("hee", index);
-      // if (index === 0) {
-      //   return;
-      // }
       setFlipped([id]);
       return;
     }
@@ -112,48 +108,51 @@ const MemoryGame = ({ gameMode }) => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4 space-y-6">
-      <h1 className="text-3xl font-bold text-gray-800 sticky top-0 bg-white py-4 z-10">
-        Memory Game
-      </h1>
-
+    <div className="flex flex-col items-center justify-center p-6 h-full w-full">
       {!start ? (
-        <Inputs
-          handleGridSizeChange={handleGridSizeChange}
-          maxMoveCount={maxMoveCount}
-          setMaxMoveCount={setMaxMoveCount}
-          time={time}
-          setTime={setTime}
-          gridSize={gridSize}
-          gameMode={gameMode}
-          startGame={startGame}
-        />
+        <>
+          <h1 className="text-3xl font-bold sticky top-0 bg-transparent py-4 z-10 text-center text-blue-400">
+            Game Settings
+          </h1>
+          <Inputs
+            handleGridSizeChange={handleGridSizeChange}
+            maxMoveCount={maxMoveCount}
+            setMaxMoveCount={setMaxMoveCount}
+            time={time}
+            setTime={setTime}
+            gridSize={gridSize}
+            gameMode={gameMode}
+            startGame={startGame}
+          />
+        </>
       ) : (
         <>
-          {lost ? (
-            <div className="text-3xl font-bold text-red-600">OOPS....!</div>
-          ) : (
-            <GameBoard
-              isFlipped={isFlipped}
-              isSolved={isSolved}
-              gridSize={gridSize}
-              cards={cards}
-              handleClick={handleClick}
-            />
-          )}
-
-          <Result resetGame={resetGame} won={won} lost={lost} />
-
-          <div className="text-lg font-semibold">
-            {gameMode === "classic" ? (
-              <div className="text-gray-800">
-                Moves: {moveCount}/{maxMoveCount}
-              </div>
+          <div className="w-full flex flex-col items-center space-y-4">
+            {lost ? (
+              <div className="text-3xl font-bold text-red-600">OOPS....!</div>
             ) : (
-              <div className="text-gray-800">
-                <Timer time={time} setTime={setTime} won={won} />
-              </div>
+              <GameBoard
+                isFlipped={isFlipped}
+                isSolved={isSolved}
+                gridSize={gridSize}
+                cards={cards}
+                handleClick={handleClick}
+              />
             )}
+
+            <Result resetGame={resetGame} won={won} lost={lost} />
+
+            <div className="text-lg font-semibold text-gray-300">
+              {gameMode === "classic" ? (
+                <div>
+                  Moves: {moveCount}/{maxMoveCount}
+                </div>
+              ) : (
+                <div>
+                  <Timer time={time} setTime={setTime} won={won} />
+                </div>
+              )}
+            </div>
           </div>
         </>
       )}

@@ -1,20 +1,39 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const navigate = useNavigate();
 
+  useEffect(() => {
+    // Trigger animation by adding class on page load
+    const elements = document.querySelectorAll(".animate-on-load");
+    elements.forEach((element, index) => {
+      setTimeout(() => {
+        element.classList.add("fade-in");
+      }, index * 300); // staggered animation
+    });
+  }, []);
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <h1 className="text-4xl font-bold mb-12 text-center text-gray-800">
+    <div
+      className="flex flex-col items-center justify-center min-h-screen animate-on-load"
+      style={{
+        background:
+          "linear-gradient(90deg, rgba(0, 0, 255, 0.1) 25%, transparent 25%) -50px 0, linear-gradient(180deg, rgba(0, 0, 255, 0.1) 25%, transparent 25%) 0 -50px",
+        backgroundSize: "40px 40px",
+        backgroundColor: "#0f0f0f",
+      }}
+    >
+      {/* Title with glowing effect */}
+      <h1 className="text-5xl font-bold mb-16 text-center text-blue-400 drop-shadow-lg animate-on-load">
         Welcome to the Memory Game Arcade
       </h1>
 
-      {/* Select mode */}
-      <div className="flex justify-center gap-8">
+      {/* Select mode with improved layout */}
+      <div className="flex justify-center gap-10 animate-on-load">
         {/* Classic mode card */}
         <div
-          className="cursor-pointer w-72 h-48 bg-red-500 text-white rounded-lg shadow-lg flex items-center justify-center text-2xl font-semibold hover:bg-red-600 transition-all duration-200"
+          className="cursor-pointer w-80 h-56 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-xl shadow-xl flex items-center justify-center text-3xl font-semibold transform hover:scale-105 hover:shadow-2xl transition-all duration-300 animate-on-load"
           onClick={() => navigate("/classic")}
         >
           Classic Mode
@@ -22,7 +41,7 @@ const Dashboard = () => {
 
         {/* Timed mode card */}
         <div
-          className="cursor-pointer w-72 h-48 bg-blue-500 text-white rounded-lg shadow-lg flex items-center justify-center text-2xl font-semibold hover:bg-blue-600 transition-all duration-200"
+          className="cursor-pointer w-80 h-56 bg-gradient-to-r from-blue-500 to-blue-400 text-white rounded-xl shadow-xl flex items-center justify-center text-3xl font-semibold transform hover:scale-105 hover:shadow-2xl transition-all duration-300 animate-on-load"
           onClick={() => navigate("/timed")}
         >
           Timed Mode
