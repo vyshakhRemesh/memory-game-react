@@ -3,17 +3,17 @@ import "./App.css";
 import Dashboard from "./pages/Dashboard.jsx";
 import ClassicGame from "./pages/ClassicGame.jsx";
 import TimedGame from "./pages/TimedGame.jsx";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/classic" element={<ClassicGame />} />
         <Route path="/timed" element={<TimedGame />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
