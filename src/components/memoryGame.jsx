@@ -128,6 +128,26 @@ const MemoryGame = ({ gameMode }) => {
       ) : (
         <>
           <div className="w-full flex flex-col items-center space-y-4">
+            <div className="text-lg font-semibold text-gray-300">
+              {gameMode === "classic" ? (
+                <div className="flex items-center justify-center w-auto h-16 bg-blue-500 text-white rounded-lg shadow-md text-xl font-semibold px-4 border-4 border-blue-700">
+                  <span>
+                    Moves:{" "}
+                    <span className="text-green-300 font-bold">
+                      {moveCount}
+                    </span>{" "}
+                    /{" "}
+                    <span className="text-red-300 font-bold">
+                      {maxMoveCount}
+                    </span>
+                  </span>
+                </div>
+              ) : (
+                <div>
+                  <Timer time={time} setTime={setTime} won={won} />
+                </div>
+              )}
+            </div>
             {lost ? (
               <div className="text-3xl font-bold text-red-600">OOPS....!</div>
             ) : (
@@ -141,18 +161,6 @@ const MemoryGame = ({ gameMode }) => {
             )}
 
             <Result resetGame={resetGame} won={won} lost={lost} />
-
-            <div className="text-lg font-semibold text-gray-300">
-              {gameMode === "classic" ? (
-                <div>
-                  Moves: {moveCount}/{maxMoveCount}
-                </div>
-              ) : (
-                <div>
-                  <Timer time={time} setTime={setTime} won={won} />
-                </div>
-              )}
-            </div>
           </div>
         </>
       )}
